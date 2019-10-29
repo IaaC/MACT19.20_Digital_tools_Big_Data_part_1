@@ -93,4 +93,3 @@ antarctica = countries[countries['NAME'] == 'Antarctica']
 antarctica = antarctica.to_crs({'init': 'epsg:3031'})
 ax = antarctica.plot()
 ax.set_title("Antarctica")
-
