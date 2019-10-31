@@ -98,8 +98,6 @@ antarctica = countries[countries['NAME'] == 'Antarctica']
 
 # CHANGE COORDINATES REFERENCE SYSTEM FROM 4326 TO 3031 (IMPORTANT TO INSTALL PYPROJ LIBRARY VERSION 2.2.0)
 antarctica = antarctica.to_crs({'init': 'epsg:3031'})
-ax.set_axis_off()
 ax = antarctica.plot()
 ax.set_title("Antarctica")
-
-print('Hello')
+plt.show()
