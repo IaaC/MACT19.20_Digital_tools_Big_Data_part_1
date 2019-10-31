@@ -20,12 +20,14 @@
 
 # We need to import pandas library as well as the plot libraries matplotlib and seaborn
 import pandas as pd
+import geopandas
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# We read the file for population data
+# We read the file for population and gdp data. Also geospatial data about countries
 population = pd.read_csv('../data/world/pop_total_v2.csv', skiprows=4, header=0)
 gdp = pd.read_csv('../data/world/gdp_percap_v2.csv', skiprows=4, header=0)
+countries = geopandas.read_file('../data/world/ne_admin_0_countries.geojson')
 
 # Since the data combines information from countries and regions, we need to split out the two levels based on the list
 regions_list = ['Central Europe and the Baltics', 'Caribbean small states',
@@ -59,14 +61,28 @@ for year in range(1960, 2018):
 
 ax = sns.lineplot(x='year', y='growth', hue='Country Code', data=growth, legend=False)
 plt.show()
-print('Done')
 
 
+# For the following tasks we need a simplified geodataframe for countries. Only country code and geometry is needed
+countries = countries[['ADM0_A3', 'geometry']]
+countries.columns = ['Country Code', 'geometry']
 
 
-# Average Population growth map with three categories <-1.5
+# We can also apply a "Group by" function to calculate averages or other summary statistics
+# This functions serves to simplify data and to generate new data sets
+avg_growth = growth.groupby(by=['Country Code']).mean()     # Mind the difference added by the parameter "as_index"
+avg_growth = growth.groupby(by=['Country Code'], as_index=False).mean()
+# We can merge the results with geospatial information and map it
+countries_pop_avg_growth = countries.merge(avg_growth, on='Country Code')
+countries_pop_avg_growth.plot(column='growth', legend='true')
+plt.show()
 
 
-# Export geojson
+# Using the new data we can export this result for visualisation in GIS
+# We can use the geojson file
 
+countries_pop_growth = countries.merge(growth, on='Country Code', how='right')
+countries_pop_growth.to_file('../outcomes/pop_growth')
+print('Shapefile Saved...')
 
+# Try to visualise population growth map with three categories (< -1.5 | -1.5 to 1.5 | > 1.5)
