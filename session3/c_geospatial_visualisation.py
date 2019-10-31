@@ -49,6 +49,7 @@ fig, ax = plt.subplots(1, 1)
 # Additional schemas come from "mapclassify" library
 countries_pop_1960.plot(column='1960', ax=ax, cmap='magma', scheme='fisher_jenks', legend=True)
 ax.set_title("World Population. Year 1960")
+# turn axis off to have a cleaner map
 ax.set_axis_off()
 plt.show()
 # There are options for saving plots
@@ -68,17 +69,22 @@ countries_gdp = countries_gdp[['ADM0_A3', 'NAME', 'geometry', 'Country Code', '1
 fig, (ax1, ax2, ax3, ax4) = plt.subplots(nrows=4)
 # SET THE FIRST MAP
 countries_gdp.plot(column='1960', ax=ax1, cmap='magma', scheme='fisher_jenks', legend=False)
+# turn axis off
 ax1.set_axis_off()
 # SET THE SECOND MAP
 countries_gdp.plot(column='1980', ax=ax2, cmap='magma', scheme='fisher_jenks', legend=False)
+# turn axis off
 ax2.set_axis_off()
 # SET THE THIRD MAP
 countries_gdp.plot(column='2000', ax=ax3, cmap='magma', scheme='fisher_jenks', legend=False)
+# turn axis off
 ax3.set_axis_off()
 # SET THE FOURTH MAP
 countries_gdp.plot(column='2018', ax=ax4, cmap='magma', scheme='fisher_jenks', legend=True)
+# turn axis off
 ax4.set_axis_off()
 ax.set_axis_off()
+# show plot
 plt.show()
 # There are options for saving plots
 # plt.savefig('../outcomes/map_gdp.png', dpi=300, format='png')
@@ -87,9 +93,13 @@ plt.show()
 print('Countries data is originally stored in ')
 # PRINT THE COORDINATE REFERENCE SYSTEM ATTRIBUTE
 print(countries.crs)
+# filter antarctica
 antarctica = countries[countries['NAME'] == 'Antarctica']
 
 # CHANGE COORDINATES REFERENCE SYSTEM FROM 4326 TO 3031 (IMPORTANT TO INSTALL PYPROJ LIBRARY VERSION 2.2.0)
 antarctica = antarctica.to_crs({'init': 'epsg:3031'})
+ax.set_axis_off()
 ax = antarctica.plot()
 ax.set_title("Antarctica")
+
+print('Hello')

@@ -52,12 +52,16 @@ growth = pd.DataFrame(columns=['Country Code', 'year', 'growth'])
 # Population growth lines
 for year in range(1960, 2018):
     value_pop = pop_regions[['Country Code', str(year), str(year + 1)]]
+    # use population growth formula
     value_pop['growth'] = (value_pop[str(year + 1)] - value_pop[str(year)]) / value_pop[str(year)] * 100
     value_pop['year'] = year
+    # then we create an empty dataframe and append the three columns 'country code' 'growth' 'year'
     growth = growth.append(value_pop[['Country Code', 'growth', 'year']])
     print('Added calculations for year %i' % year)
 
+# create a line plot with x axis 'year' and y axis 'growth'
 ax = sns.lineplot(x='year', y='growth', hue='Country Code', data=growth, legend=False)
+# show plot
 plt.show()
 print('Done')
 
