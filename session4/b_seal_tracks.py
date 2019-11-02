@@ -74,7 +74,9 @@ for y in years:
     # if the year of the seal tracks geodataframe is equal to y then set the plot
     seal_tracks[seal_tracks['year'] == y].plot(ax=base, color='gray', linewidth=0.07)
     # save each image in the outcomes folder
-    file = '../outcomes/seal_tracks_%s.png' % y  # Every single map is saved
+    file = '../outcomes/seal_tracks_%s.png' % y  # the extension needs to be the same as the format of the line below
+    # set the definition and format of the images (there are different options for formats e.g. png, pdf, etc)
+    # for formats look at documentation here (https://matplotlib.org/3.1.0/api/_as_gen/matplotlib.pyplot.savefig.html)
     plt.savefig(file, dpi=300, format='png')
     plt.close()
     # print this string each time that a seal track map is saved
