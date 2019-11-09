@@ -28,11 +28,15 @@ import numpy as np
 
 # We load the data and sort it considering the max_capacity column
 facilities_all = pd.read_csv('../data/antarctica/COMNAP_Antarctic_Facilities.csv')
+# we drop all the rows in the dataframe that have values less than 0 in the 'max cap' column
 facilities = facilities_all[facilities_all['max_cap'] > 0]
+# we sort the dataframe according with the values in the 'max cap' column
 facilities = facilities.sort_values(['max_cap'], ascending=False).reset_index(drop=True)
 
 # Setting the style from seaborn gallery. Che
+# set background color (it might be white, dark, whitegrid, darkgrid, etc)
 sns.set(style="white")
+# set color style
 sns.set_color_codes("pastel")
 
 
@@ -53,31 +57,41 @@ plt.show()
 
 
 # Data stored in columns also serve for creating facets to split out plots, it can be either 1 or 2 dimension facets
+# add a new column 'peak ocu' defined by the calculation underneath
 facilities['peak_ocu'] = facilities['peak_pop'] / facilities['max_cap'] * 100
 g = sns.FacetGrid(facilities, col='ant_reg')
 g = g.map(sns.barplot, 'name_eng', 'peak_ocu', color='gray')
+# set titles for each plot
 g.set_titles("{col_name}")
+# set y label for each plot
 g.set(ylabel='Peak occupation (%)', xlabel='')
 plt.show()
 
 
 # Heat maps are also an alternative to visualise patters. We can use it to represent the number of stations
-# stablished per regions and years. It implies operations of aggregation and count
+# established per regions and years. It implies operations of aggregation and count
 
 # It creates a simplified dataframe with integer values as well as a pivot table for the counting function
 facilities_region = facilities_all[['ant_reg', 'year_est', 'max_cap']]
+# we drop the nan ('not a number') values
 facilities_region = facilities_region.dropna()
 # Changing year values from float to integer
 facilities_region['year_est'] = facilities_region['year_est'].apply(lambda x: int(x) if x == x else '')
+# group dataframe by regions and year columns
 facilities_region = facilities_region.groupby(by=['ant_reg', 'year_est'], as_index=False).count()
+# invert dataframe organization
 facilities_region = facilities_region.pivot('ant_reg', 'year_est', 'max_cap')
 
 # Draw a heatmap with the numeric values in each cell
 f, ax = plt.subplots()
 sns.heatmap(facilities_region, annot=True, linewidths=.5, ax=ax, cbar=False)
+# set x label
 plt.xlabel('')
+# set y label
 plt.ylabel('')
+# set title
 plt.title('New stations established per year')
+# show the plot
 plt.show()
 
 print('Done')
